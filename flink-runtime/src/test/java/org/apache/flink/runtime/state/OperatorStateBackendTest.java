@@ -662,19 +662,24 @@ public class OperatorStateBackendTest {
             assertFalse(it.hasNext());
 
             Iterator<Map.Entry<Serializable, Serializable>> bIt = broadcastState1.iterator();
-            assertTrue(bIt.hasNext());
-            Map.Entry<Serializable, Serializable> entry = bIt.next();
-            assertEquals(1, entry.getKey());
-            assertEquals(2, entry.getValue());
-            assertTrue(bIt.hasNext());
-            entry = bIt.next();
-            assertEquals(2, entry.getKey());
-            assertEquals(5, entry.getValue());
-            assertFalse(bIt.hasNext());
+
+            int count = 0;
+            while (bIt.hasNext()) {
+                Map.Entry<Serializable, Serializable> entry = bIt.next();
+                if (entry.getKey().equals(1)) {
+                    assertEquals(2, entry.getValue());
+                } else if (entry.getKey().equals(2)) {
+                    assertEquals(5, entry.getValue());
+                } else {
+                    fail("Unexpected key in broadcast state: " + entry.getKey());
+                }
+                count++;
+            }
+            assertEquals(2, count);
 
             bIt = broadcastState2.iterator();
             assertTrue(bIt.hasNext());
-            entry = bIt.next();
+            Map.Entry<Serializable, Serializable> entry = bIt.next();
             assertEquals(2, entry.getKey());
             assertEquals(5, entry.getValue());
             assertFalse(bIt.hasNext());
