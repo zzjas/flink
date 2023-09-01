@@ -684,6 +684,9 @@ public class OperatorStateBackendTest {
             assertEquals(5, entry.getValue());
             assertFalse(bIt.hasNext());
 
+            bIt = broadcastState3.iterator();
+            assertFalse(bIt.hasNext());
+
             operatorStateBackend.close();
             operatorStateBackend.dispose();
         } finally {
